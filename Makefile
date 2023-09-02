@@ -14,8 +14,8 @@ RAND ?= 42
 
 
 all:
-    @python train_pre.py \
-        --ngram=${NGRAM} \
+	@python train_pre.py \
+		--ngram=${NGRAM} \
         --name=${NAME} \
         --bar=${BAR} \
         --wd=${WD} \
