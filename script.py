@@ -67,6 +67,7 @@ if __name__ == "__main__":
     vocab = set()
     for t in train['tweet'].apply(nltk.word_tokenize):
         vocab = vocab.union(set(t))
+    vocab.add('UNK')
 
     with open(base + "OLIDv1-vocab.txt", "w") as f:
         f.write("\n".join(vocab))
