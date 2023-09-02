@@ -46,6 +46,7 @@ class DataHelper(object):
         return [self.labels_str.index(l) for l in label_str]
 
     def get_content(self):
+        print(f"Start getting the content of {self.current_set}...")
         with open(self.current_set) as f:
             all = f.read()
             content = [line.split('\t') for line in all.split('\n')]
