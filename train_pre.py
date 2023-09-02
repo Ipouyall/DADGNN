@@ -155,17 +155,29 @@ if __name__ == '__main__':
     parser.add_argument('--num_layers', required=False, type=int, default=5, help='model layer')
     parser.add_argument('--num_heads', required=False, type=int, default=2, help='head number')
     parser.add_argument('--k', required=False, type=int, default=5, help='k')
-    parser.add_argument('--alpha', required=False, type=int, default=0.5, help='alpha')
+    parser.add_argument('--alpha', required=False, type=float, default=0.5, help='alpha')
     parser.add_argument('--dataset', required=True, type=str, help='dataset')
     parser.add_argument('--edges', required=False, type=int, default=1, help='trainable edges')
     parser.add_argument('--rand', required=False, type=int, default=42, help='rand_seed')
 
     args = parser.parse_args()
 
-    print('ngram: %d' % args.ngram)
-    print('project_name: %s' % args.name)
-    print('dataset: %s' % args.dataset)
-    print('trainable_edges: %s' % args.edges)
+    print(f"""DADGNN(
+    n-gram: {args.ngram},
+    project's name: {args.name},
+    bar: {'enabled' if args.bar else 'disabled'},
+    weight-decay: {args.wd},
+    dropout: {args.dropout},
+    hidden states: {args.num_hidden},
+    number of layers: {args.num_layers},
+    num of heads: {args.num_heads},
+    k: {args.k},
+    alpha: {args.alpha},
+    dataset: {args.dataset},
+    trainable edges: {True if args.edges else False},
+    seed: {args.rand}
+)""")
+
     
     SEED = args.rand
     torch.manual_seed(SEED)
@@ -184,7 +196,21 @@ if __name__ == '__main__':
     else:
         edges = False
 
-    model = train(args.ngram, args.name, args.wd, bar, args.dropout, args.num_hidden, args.num_layers, args.num_heads, args.k, args.alpha,dataset=args.dataset, is_cuda=True, edges=edges)
+    model = train(
+        args.ngram,
+        args.name,
+        args.wd,
+        bar,
+        args.dropout,
+        args.num_hidden,
+        args.num_layers,
+        args.num_heads,
+        args.k,
+        args.alpha,
+        dataset=args.dataset,
+        is_cuda=True,
+        edges=edges
+    )
     model.load_state_dict(torch.load('model.pth'))
     result = test(model, args.dataset)
     print('top-1 test acc: ', result)
