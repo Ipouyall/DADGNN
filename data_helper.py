@@ -1,6 +1,8 @@
 import os
 import torch
 import csv
+import nltk
+
 
 
 class DataHelper(object):
@@ -49,14 +51,14 @@ class DataHelper(object):
         print(f"Start getting the content of {self.current_set}...")
         with open(self.current_set) as f:
             all = f.read()
-            content = [line.split('\t') for line in all.split('\n')]
+            content = [line.split('\t') for line in all.split('\n') if line]
        
         label, content = zip(*content)
 
         return content, label
 
     def word2id(self, word):
-
+        word = nltk.word_tokenize(word)[0]
         try:
             result = self.d[word]
         except KeyError:
