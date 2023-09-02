@@ -7,13 +7,17 @@ class DataHelper(object):
     def __init__(self, dataset, mode, vocab=None):
         allowed_data = ['r8', 'r52', 'mr', 'SST1', 'SST2', 'IMDB', 'TREC', 'WebKB', 'DBLP', 'ag_news']
 
-        if dataset not in allowed_data:
-            raise ValueError('currently allowed data: %s' % ','.join(allowed_data))
-        else:
+        # if dataset not in allowed_data:
+        #     raise ValueError('currently allowed data: %s' % ','.join(allowed_data))
+        # else:
+        #     self.dataset = dataset
+        if os.path.exists('./data/' + dataset):
             self.dataset = dataset
+        else:
+            raise ValueError("Your dataset doesn't exists")
 
         self.mode = mode
-        self.base = '/DADGNN/data/' + self.dataset
+        self.base = 'data/' + self.dataset
         self.current_set = os.path.join(self.base, '%s-%s.txt' % (self.dataset, self.mode))
 
         with open(os.path.join(self.base, 'label.txt')) as f:
