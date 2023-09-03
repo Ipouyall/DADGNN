@@ -25,6 +25,7 @@ class Model(torch.nn.Module):
         super(Model, self).__init__()
 
         self.vocab = vocab
+        self.is_cuda = torch.cuda.is_available() and cuda
 
         self.node_hidden = torch.nn.Embedding(len(vocab), num_feats)
         self.node_hidden.weight.data.copy_(torch.tensor(self.load_word2vec('glove.6B.300d.txt')))
