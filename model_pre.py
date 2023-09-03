@@ -28,7 +28,7 @@ class Model(torch.nn.Module):
         self.vocab = vocab
 
         self.node_hidden = torch.nn.Embedding(len(vocab), num_feats)
-        self.node_hidden.weight.data.copy_(torch.tensor(self.load_word2vec('/content/glove.6B.300d.txt')))
+        self.node_hidden.weight.data.copy_(torch.tensor(self.load_word2vec('glove.6B.300d.txt')))
         self.node_hidden.weight.requires_grad = True
 
         self.len_vocab = len(vocab)
