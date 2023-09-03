@@ -76,7 +76,8 @@ def train(ngram, name, wd, bar, drop_out, num_hidden, num_layers, num_heads, k, 
     model = Model(num_hidden, num_layers, num_heads, k, alpha,
                       vocab=data_helper.vocab, n_gram=ngram, drop_out=drop_out, class_num=len(data_helper.labels_str), num_feats=300)
     
-    dev_data_helper = DataHelper(dataset=dataset, mode='dev', vocab=vocab)
+    # dev_data_helper = DataHelper(dataset=dataset, mode='dev', vocab=vocab)  # This hasn't used in anywhere
+
     if torch.cuda.is_available():
         print('moved to cuda')
         model.cuda()
