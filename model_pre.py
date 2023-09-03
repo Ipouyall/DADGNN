@@ -24,7 +24,6 @@ class Model(torch.nn.Module):
                  ):
         super(Model, self).__init__()
 
-        self.is_cuda = cuda
         self.vocab = vocab
 
         self.node_hidden = torch.nn.Embedding(len(vocab), num_feats)
@@ -90,12 +89,12 @@ class Model(torch.nn.Module):
 
         old_to_new = dict(zip(local_vocab, range(len(local_vocab))))
 
-        if self.is_cuda:
+        if torch.cuda.is_available():
             local_vocab = torch.tensor(list(local_vocab)).cuda()
         else:
             local_vocab = torch.tensor(list(local_vocab))
 
-        sub_graph = dgl.DGLGraph().to('cuda')
+        sub_graph = dgl.DGLGraph().to('cuda' if torch.cuda.is_available() else 'cpu')
         sub_graph.add_nodes(len(local_vocab))
         local_node_hidden = self.node_hidden(local_vocab)
 
