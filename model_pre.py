@@ -53,7 +53,7 @@ class Model(torch.nn.Module):
       torch.nn.init.xavier_normal_(self.attn_fc.weight, gain=gain)
 
     def load_word2vec(self, word2vec_file):
-        model = gensim.models.KeyedVectors.load_word2vec_format(word2vec_file)
+        model = gensim.models.KeyedVectors.load_word2vec_format(word2vec_file, no_header=True)
 
         embedding_matrix = []
 
