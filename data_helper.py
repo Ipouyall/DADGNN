@@ -81,6 +81,9 @@ class DataHelper(object):
                 content = self.content[start:end]
                 label = self.label[start:end]
 
-                yield content, torch.tensor(label).cuda(), i
+                if torch.cuda.is_available():
+                    yield content, torch.tensor(label).cuda(), i
+                else:
+                    yield content, torch.tensor(label), i
 
   

@@ -64,7 +64,7 @@ def test(model, dataset):
     return torch.div(correct, total_pred).to('cpu').numpy()
 
 
-def train(ngram, name, wd, bar, drop_out, num_hidden, num_layers, num_heads, k, alpha, dataset, is_cuda, edges=True):
+def train(ngram, name, wd, bar, drop_out, num_hidden, num_layers, num_heads, k, alpha, dataset, edges=True):
 
     print('load data helper.')
     path = 'data/' + dataset + '/' + dataset + '-vocab.txt'
@@ -76,7 +76,7 @@ def train(ngram, name, wd, bar, drop_out, num_hidden, num_layers, num_heads, k, 
                       vocab=data_helper.vocab, n_gram=ngram, drop_out=drop_out, class_num=len(data_helper.labels_str), num_feats=300)
     
     dev_data_helper = DataHelper(dataset=dataset, mode='dev', vocab=vocab)
-    if is_cuda and torch.cuda.is_available():
+    if torch.cuda.is_available():
         print('moved to cuda')
         model.cuda()
 
@@ -184,11 +184,6 @@ if __name__ == '__main__':
     torch.cuda.manual_seed(SEED)
     np.random.seed(SEED)
     random.seed(SEED)
-
-    if args.bar == 1:
-        bar = True
-    else:
-        bar = False
     
     if args.edges == 1:
         edges = True
@@ -200,7 +195,7 @@ if __name__ == '__main__':
         args.ngram,
         args.name,
         args.wd,
-        bar,
+        args.bar == 1,
         args.dropout,
         args.num_hidden,
         args.num_layers,
@@ -208,7 +203,6 @@ if __name__ == '__main__':
         args.k,
         args.alpha,
         dataset=args.dataset,
-        is_cuda=True,
         edges=edges
     )
     model.load_state_dict(torch.load('model.pth'))
