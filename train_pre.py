@@ -41,7 +41,8 @@ def dev(model, dataset, dev_data_helper):
 
 
 def test(model, dataset):
-    model.cuda()
+    if torch.cuda.is_available():
+        model.cuda()
     data_helper = DataHelper(dataset=dataset, mode='test')
    
     total_pred = 0
