@@ -53,7 +53,7 @@ if __name__ == "__main__":
     df["tweet"] = df["tweet"].apply(lambda x: re.sub(r'#', '', x))
     # Remove URLs
     df["tweet"] = df["tweet"].apply(lambda x: re.sub(r'http\S+|www\S+|https\S+', '', x))
-    # Remove emoji
+    # Handle emoji
     # df["tweet"] = df["tweet"].apply(lambda x: remove_emojis(x))
     df["tweet"] = df["tweet"].apply(convert_emoji_to_text)
     # Remove extra whitespace
