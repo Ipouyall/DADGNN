@@ -79,10 +79,8 @@ if __name__ == "__main__":
         vocab = vocab.union(set(t))
     vocab.add('UNK')
 
-    with open(base + "OLIDv1-vocab.txt", "w") as f:
+    with open(base + "OLIDv2-vocab.txt", "w") as f:
         f.write("\n".join(vocab))
 
-
-
-
-
+    with open(base + "label.txt", "w") as f:
+        f.write("\n".join(["0", "1"]))
