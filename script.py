@@ -3,6 +3,8 @@ from sklearn.model_selection import train_test_split
 import re
 import nltk
 import ssl
+import emoji
+import os
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -29,6 +31,10 @@ emoj = re.compile("["
                       "]+", re.UNICODE)
 
 
+def convert_emoji_to_text(text):
+    return emoji.demojize(text, delimiters=(" ", " "))
+
+
 def remove_emojis(data):
     return re.sub(emoj, '', data)
 
@@ -36,7 +42,7 @@ def remove_emojis(data):
 if __name__ == "__main__":
     nltk.download('punkt')
 
-    base = "data/OLIDv1/"
+    base = "data/OLIDv2/"
     df = pd.read_csv("data/olid-training-v1.0.tsv", sep="\t")
     df["label"] = df["subtask_a"].replace({"OFF": 1, "NOT": 0})
     df.drop(labels=["id", "subtask_b", "subtask_c", "subtask_a"], inplace=True, axis=1)
@@ -48,7 +54,8 @@ if __name__ == "__main__":
     # Remove URLs
     df["tweet"] = df["tweet"].apply(lambda x: re.sub(r'http\S+|www\S+|https\S+', '', x))
     # Remove emoji
-    df["tweet"] = df["tweet"].apply(lambda x: remove_emojis(x))
+    # df["tweet"] = df["tweet"].apply(lambda x: remove_emojis(x))
+    df["tweet"] = df["tweet"].apply(convert_emoji_to_text)
     # Remove extra whitespace
     df["tweet"] = df["tweet"].apply(lambda x: re.sub(r'\s+', ' ', x).strip())
 
@@ -59,6 +66,9 @@ if __name__ == "__main__":
     print(f"{len(train) = }")
     print(f"{len(valid) = }")
     print(f"{len(test)  = }")
+
+    if not os.path.exists(base):
+        os.mkdir(base)
 
     train[["label", "tweet"]].to_csv(base + "OLIDv1-train.txt", index=False, header=False, sep='\t')
     test[["label", "tweet"]].to_csv(base + "OLIDv1-test.txt", index=False, header=False, sep='\t')
