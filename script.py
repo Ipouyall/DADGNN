@@ -70,9 +70,9 @@ if __name__ == "__main__":
     if not os.path.exists(base):
         os.mkdir(base)
 
-    train[["label", "tweet"]].to_csv(base + "OLIDv1-train.txt", index=False, header=False, sep='\t')
-    test[["label", "tweet"]].to_csv(base + "OLIDv1-test.txt", index=False, header=False, sep='\t')
-    valid[["label", "tweet"]].to_csv(base + "OLIDv1-dev.txt", index=False, header=False, sep='\t')
+    train[["label", "tweet"]].to_csv(base + "OLIDv2-train.txt", index=False, header=False, sep='\t')
+    test[["label", "tweet"]].to_csv(base + "OLIDv2-test.txt", index=False, header=False, sep='\t')
+    valid[["label", "tweet"]].to_csv(base + "OLIDv2-dev.txt", index=False, header=False, sep='\t')
 
     vocab = set()
     for t in train['tweet'].apply(nltk.word_tokenize):
