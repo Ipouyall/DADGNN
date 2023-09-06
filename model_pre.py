@@ -5,7 +5,6 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import gensim
-import fasttext
 from attention_diffusion import GATNet
 from dgl.nn.pytorch.glob import WeightAndSum
 
@@ -60,7 +59,7 @@ class Model(torch.nn.Module):
         if word2vec_method == "glove":
             model = gensim.models.KeyedVectors.load_word2vec_format('glove.6B.300d.txt', no_header=True)
         elif word2vec_method == "fasttext":
-            model = fasttext.load_model('cc.en.300.bin')
+            model = gensim.models.KeyedVectors.load_word2vec_format('cc.en.300.vec', binary=False)
         else:
             raise ValueError("word2vec_method must be 'glove' or 'fasttext'")
 
