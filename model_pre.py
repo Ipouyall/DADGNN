@@ -1,8 +1,11 @@
+from typing import Literal
+
 import dgl
 import torch
 import torch.nn.functional as F
 import numpy as np
 import gensim
+import fasttext
 from attention_diffusion import GATNet
 from dgl.nn.pytorch.glob import WeightAndSum
 
@@ -21,6 +24,7 @@ class Model(torch.nn.Module):
                  num_feats,
                  max_length=350,
                  cuda=True,
+                 embedding_method: Literal["glove", "fasttext"] = "glove"
                  ):
         super(Model, self).__init__()
 
@@ -28,7 +32,7 @@ class Model(torch.nn.Module):
         self.is_cuda = torch.cuda.is_available() and cuda
 
         self.node_hidden = torch.nn.Embedding(len(vocab), num_feats)
-        self.node_hidden.weight.data.copy_(torch.tensor(self.load_word2vec('glove.6B.300d.txt')))
+        self.node_hidden.weight.data.copy_(torch.tensor(self.load_word2vec(embedding_method)))
         self.node_hidden.weight.requires_grad = True
 
         self.len_vocab = len(vocab)
@@ -52,8 +56,13 @@ class Model(torch.nn.Module):
       torch.nn.init.xavier_normal_(self.gate_nn.weight, gain=gain)
       torch.nn.init.xavier_normal_(self.attn_fc.weight, gain=gain)
 
-    def load_word2vec(self, word2vec_file):
-        model = gensim.models.KeyedVectors.load_word2vec_format(word2vec_file, no_header=True)
+    def load_word2vec(self, word2vec_method: Literal["glove", "fasttext"]):
+        if word2vec_method == "glove":
+            model = gensim.models.KeyedVectors.load_word2vec_format('glove.6B.300d.txt', no_header=True)
+        elif word2vec_method == "fasttext":
+            model = fasttext.load_model('cc.en.300.bin')
+        else:
+            raise ValueError("word2vec_method must be 'glove' or 'fasttext'")
 
         embedding_matrix = []
 

@@ -65,7 +65,7 @@ def test(model, dataset):
     return torch.div(correct, total_pred).to('cpu').numpy()
 
 
-def train(ngram, name, wd, bar, drop_out, num_hidden, num_layers, num_heads, k, alpha, dataset, edges=True):
+def train(ngram, name, wd, bar, drop_out, num_hidden, num_layers, num_heads, k, alpha, dataset, embedding, edges=True):
 
     print('load data helper.')
     path = 'data/' + dataset + '/' + dataset + '-vocab.txt'
@@ -73,8 +73,19 @@ def train(ngram, name, wd, bar, drop_out, num_hidden, num_layers, num_heads, k, 
       vocab = f.read()
       vocab = vocab.split('\n')
     data_helper = DataHelper(dataset=dataset, mode='train', vocab=vocab)
-    model = Model(num_hidden, num_layers, num_heads, k, alpha,
-                      vocab=data_helper.vocab, n_gram=ngram, drop_out=drop_out, class_num=len(data_helper.labels_str), num_feats=300)
+    model = Model(
+        num_hidden,
+        num_layers,
+        num_heads,
+        k,
+        alpha,
+        vocab=data_helper.vocab,
+        n_gram=ngram,
+        drop_out=drop_out,
+        class_num=len(data_helper.labels_str),
+        num_feats=300,
+        embedding_method=embedding,
+    )
     
     # dev_data_helper = DataHelper(dataset=dataset, mode='dev', vocab=vocab)  # This hasn't used in anywhere
 
@@ -161,6 +172,7 @@ if __name__ == '__main__':
     parser.add_argument('--dataset', required=True, type=str, help='dataset')
     parser.add_argument('--edges', required=False, type=int, default=1, help='trainable edges')
     parser.add_argument('--rand', required=False, type=int, default=42, help='rand_seed')
+    parser.add_argument('--embedding', required=False, type=str, default='glove', choices=['glove', 'fasttext'], help='embedding method')
 
     args = parser.parse_args()
 
@@ -176,6 +188,7 @@ if __name__ == '__main__':
     k: {args.k},
     alpha: {args.alpha},
     dataset: {args.dataset},
+    embedding: {args.embedding},
     trainable edges: {True if args.edges else False},
     seed: {args.rand}
 )""")
@@ -205,7 +218,8 @@ if __name__ == '__main__':
         args.k,
         args.alpha,
         dataset=args.dataset,
-        edges=edges
+        edges=edges,
+        embedding=args.embedding,
     )
     model.load_state_dict(torch.load('model.pth'))
     result = test(model, args.dataset)

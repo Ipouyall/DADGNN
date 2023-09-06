@@ -11,6 +11,7 @@ ALPHA ?= 0.5
 DATASET ?= OLIDv1
 EDGES ?= 1
 RAND ?= 42
+EMBEDDING ?= glove
 
 
 all:
@@ -27,4 +28,5 @@ all:
         --alpha=${ALPHA} \
         --dataset=${DATASET} \
         --edges=${EDGES} \
-        --rand=${RAND}
+        --rand=${RAND} \
+        --embedding=${EMBEDDING}
